@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: #00BFA6;
+  --color-primary-dark: #009688;
+  --color-accent-cyan: #26C6DA;
+  --color-accent-green: #00E676;
+  --color-accent-yellow: #FFD54F;
+  --color-bg-mint: #F0FAF7;
+  --color-text-dark: #1A2E35;
+  --color-text-muted: #78909C;
+  --color-border-light: #E0F2F1;
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #F0FAF7;
+  color: #1A2E35;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00BFA6, #26C6DA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-teal {
+  background: linear-gradient(135deg, #00BFA6, #009688);
+}
+
+.gradient-teal-cyan {
+  background: linear-gradient(135deg, #00BFA6, #26C6DA);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 191, 166, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(0, 191, 166, 0); }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+.phone-screen::-webkit-scrollbar {
+  display: none;
 }
