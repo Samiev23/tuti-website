@@ -36,6 +36,15 @@ export const metadata: Metadata = {
     description:
       "Барномаи ройгон барои омӯхтани забонҳои русӣ ва англисӣ дар Тоҷикистон.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   metadataBase: new URL("https://tutitj.com"),
 };
 
@@ -46,12 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tg" className="scroll-smooth">
-      <head>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2300BFA6'/><text y='68' x='50' text-anchor='middle' font-size='60'>🦜</text></svg>"
-        />
-      </head>
+      <head />
       <body className={`${nunito.variable} font-sans antialiased`}>
         {children}
       </body>
