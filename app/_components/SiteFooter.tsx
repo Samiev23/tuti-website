@@ -4,8 +4,7 @@ import { TutiMascot } from "./TutiMascot";
 
 const socialLinks = [
   { href: "https://t.me/tutitj", label: "Telegram" },
-  { href: "https://instagram.com/tutitj", label: "Instagram" },
-  { href: "https://youtube.com/@tutitj", label: "YouTube" },
+  { href: "https://instagram.com/tutitj.official", label: "Instagram" },
 ];
 
 export function SiteFooter() {
