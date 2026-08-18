@@ -38,11 +38,6 @@ body {
   50% { transform: translateY(-14px); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 191, 166, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(0, 191, 166, 0); }
-}
-
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -58,10 +53,6 @@ body {
   animation: float 4s ease-in-out infinite;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2.5s ease-in-out infinite;
-}
-
 .animate-fade-up {
   animation: fade-up 0.7s ease-out both;
 }
@@ -70,7 +61,3 @@ body {
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
-
-.phone-screen::-webkit-scrollbar {
-  display: none;
-}

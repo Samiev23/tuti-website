@@ -1,30 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { SiteFooter } from "@/app/_components/SiteFooter";
 import { TutiMascot } from "@/app/_components/TutiMascot";
 
-/* ─── Fade-Up on Scroll Observer ─── */
-function useFadeUp() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("animate-fade-up");
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
+/**
+ * Ссылка на страницу приложения в Google Play.
+ * Пока пусто — кнопки показывают «Ба зудӣ дар Google Play» и не кликаются.
+ * Впишите сюда адрес, и обе кнопки сами станут рабочими ссылками.
+ */
+const APP_STORE_URL = "";
+
+/* ─── Появление при скролле ─── */
 
 function FadeUp({
   children,
@@ -35,7 +23,24 @@ function FadeUp({
   className?: string;
   delay?: string;
 }) {
-  const ref = useFadeUp();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("animate-fade-up");
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div ref={ref} className={`opacity-0 ${delay} ${className}`}>
       {children}
@@ -43,355 +48,340 @@ function FadeUp({
   );
 }
 
-/* ─── Phone Mockup ─── */
-function PhoneMockup() {
-  return (
-    <div className="animate-float">
-      <div
-        className="relative rounded-[32px] border-[3px] border-text-dark/80 bg-white overflow-hidden shadow-2xl"
-        style={{ width: 220, height: 440 }}
+/* ─── Кнопка загрузки ─── */
+
+function DownloadButton({ variant = "solid" }: { variant?: "solid" | "white" }) {
+  const base =
+    "inline-flex items-center justify-center rounded-2xl font-bold text-base px-7 py-4 transition-opacity";
+  const skin =
+    variant === "white"
+      ? "bg-white text-primary"
+      : "bg-primary text-white";
+
+  if (!APP_STORE_URL) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-disabled="true"
+        className={`${base} ${skin} opacity-70 cursor-default`}
       >
-        {/* Status bar */}
-        <div className="flex items-center justify-between px-4 pt-2 pb-1 text-[8px] font-bold text-text-dark">
-          <span>9:41</span>
-          <div className="flex gap-1">
-            <span>●●●</span>
-          </div>
-        </div>
+        Боргирӣ кунед
+      </button>
+    );
+  }
 
-        {/* App header */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-border-light">
-          <div className="flex items-center gap-1.5">
-            <div className="w-5 h-5 rounded-full gradient-teal-cyan flex items-center justify-center">
-              <span className="text-[6px] text-white">◠◠</span>
-            </div>
-            <span className="text-[10px] font-bold text-text-dark">Tuti</span>
-          </div>
-          <div className="flex gap-1.5">
-            <div className="bg-accent-yellow/20 rounded-full px-1.5 py-0.5 text-[7px] font-bold text-text-dark">
-              🔥 7
-            </div>
-            <div className="bg-primary/10 rounded-full px-1.5 py-0.5 text-[7px] font-bold text-primary">
-              ⭐ 240
-            </div>
-          </div>
-        </div>
+  return (
+    <a
+      href={APP_STORE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${base} ${skin} hover:opacity-90`}
+    >
+      Боргирӣ кунед
+    </a>
+  );
+}
 
-        {/* Streak card */}
-        <div className="mx-3 mt-2 rounded-xl gradient-teal p-2.5">
-          <div className="text-[8px] font-bold text-white mb-1.5">
-            Силсилаи ҳафтагӣ
-          </div>
-          <div className="flex gap-1.5 justify-between">
-            {["Д", "С", "Ч", "П", "Ҷ", "Ш", "Я"].map((d, i) => (
-              <div key={d} className="flex flex-col items-center gap-0.5">
-                <div
-                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[6px] font-bold ${
-                    i < 5
-                      ? "bg-white text-primary"
-                      : "bg-white/30 text-white/70"
-                  }`}
-                >
-                  {i < 5 ? "✓" : d}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+function SoonNote({ tone = "muted" }: { tone?: "muted" | "light" }) {
+  if (APP_STORE_URL) return null;
+  return (
+    <p
+      className={`mt-3 text-sm font-semibold ${
+        tone === "light" ? "text-white/70" : "text-text-muted"
+      }`}
+    >
+      Ба зудӣ дар Google Play
+    </p>
+  );
+}
 
-        {/* Language card */}
-        <div className="mx-3 mt-2 rounded-xl bg-bg-mint p-2.5 flex items-center gap-2">
-          <span className="text-lg">🇷🇺</span>
-          <div>
-            <div className="text-[9px] font-bold text-text-dark">
-              Забони русӣ
-            </div>
-            <div className="text-[7px] text-text-muted">Сатҳ 3 · 65%</div>
-          </div>
-        </div>
+/* ─── Корпус телефона ───────────────────────────────────────────
+   Экраны ниже — стилизованные, для вёрстки. Когда будут настоящие
+   скриншоты, замените содержимое <Phone> на <Image fill … />.
+   ────────────────────────────────────────────────────────────── */
 
-        {/* Topic cards */}
-        <div className="px-3 mt-2 space-y-1.5">
-          {[
-            { title: "Салом!", progress: 100, emoji: "👋" },
-            { title: "Рақамҳо", progress: 72, emoji: "🔢" },
-            { title: "Хӯрок", progress: 30, emoji: "🍎" },
-          ].map((topic) => (
+function Phone({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`relative w-[230px] h-[468px] shrink-0 overflow-hidden rounded-[34px] border-[5px] border-text-dark bg-white shadow-[0_30px_60px_-30px_rgba(26,46,53,0.5)] ${className}`}
+    >
+      <div className="absolute inset-x-0 top-0 z-10 flex justify-center pt-2.5">
+        <div className="h-1.5 w-14 rounded-full bg-text-dark/15" />
+      </div>
+      <div className="h-full pt-8">{children}</div>
+    </div>
+  );
+}
+
+function ScreenLessons() {
+  const week = ["Д", "С", "Ч", "П", "Ҷ", "Ш", "Я"];
+  const topics = [
+    { title: "Салом!", progress: 100 },
+    { title: "Рақамҳо", progress: 72 },
+    { title: "Хӯрок", progress: 30 },
+  ];
+
+  return (
+    <div className="px-3.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-extrabold text-text-dark">Дарсҳо</span>
+        <span className="rounded-full bg-accent-yellow/25 px-2 py-0.5 text-[9px] font-bold text-text-dark">
+          7 рӯз
+        </span>
+      </div>
+
+      <div className="mt-3 rounded-2xl bg-primary p-3">
+        <div className="mb-2 text-[9px] font-bold text-white/90">Силсила</div>
+        <div className="flex justify-between">
+          {week.map((d, i) => (
             <div
-              key={topic.title}
-              className="flex items-center gap-2 bg-white rounded-lg border border-border-light p-1.5"
+              key={d}
+              className={`flex h-5 w-5 items-center justify-center rounded-full text-[8px] font-bold ${
+                i < 5 ? "bg-white text-primary" : "bg-white/25 text-white/70"
+              }`}
             >
-              <span className="text-sm">{topic.emoji}</span>
-              <div className="flex-1 min-w-0">
-                <div className="text-[8px] font-bold text-text-dark">
-                  {topic.title}
-                </div>
-                <div className="w-full h-1 bg-border-light rounded-full mt-0.5">
-                  <div
-                    className="h-full rounded-full gradient-teal"
-                    style={{ width: `${topic.progress}%` }}
-                  />
-                </div>
-              </div>
-              <span className="text-[7px] text-text-muted font-bold">
-                {topic.progress}%
+              {i < 5 ? "✓" : d}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-2.5 rounded-2xl bg-bg-mint p-3">
+        <div className="text-[10px] font-extrabold text-text-dark">
+          Забони русӣ
+        </div>
+        <div className="text-[9px] text-text-muted">Сатҳи 3 · 65%</div>
+      </div>
+
+      <div className="mt-2.5 space-y-2">
+        {topics.map((t) => (
+          <div
+            key={t.title}
+            className="rounded-xl border border-border-light p-2.5"
+          >
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-[10px] font-bold text-text-dark">
+                {t.title}
+              </span>
+              <span className="text-[9px] font-bold text-text-muted">
+                {t.progress}%
               </span>
             </div>
-          ))}
-        </div>
+            <div className="h-1 w-full rounded-full bg-border-light">
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{ width: `${t.progress}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-        {/* Bottom nav */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center py-2 border-t border-border-light bg-white">
-          {["🏠", "📚", "🏆", "👤"].map((icon) => (
-            <span key={icon} className="text-sm opacity-60">
-              {icon}
+function ScreenPractice() {
+  const chat = [
+    { from: "ai", text: "Дирӯз чӣ кор кардӣ?" },
+    { from: "me", text: "I go to school." },
+    { from: "ai", text: "Наздик! «I went to school» — гузашта." },
+  ];
+
+  return (
+    <div className="flex h-full flex-col px-3.5 pb-3.5">
+      <div className="text-[11px] font-extrabold text-text-dark">
+        Муаллими AI
+      </div>
+
+      <div className="mt-3 flex-1 space-y-2.5">
+        {chat.map((m, i) => (
+          <div
+            key={i}
+            className={`max-w-[85%] rounded-2xl px-3 py-2 text-[10px] leading-snug ${
+              m.from === "ai"
+                ? "bg-bg-mint text-text-dark"
+                : "ml-auto bg-primary text-white"
+            }`}
+          >
+            {m.text}
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-full border border-border-light px-3 py-2 text-[10px] text-text-muted">
+        Ҷавоб нависед…
+      </div>
+    </div>
+  );
+}
+
+function ScreenRanking() {
+  const rows = [
+    { place: 1, name: "Нозим", xp: 1240 },
+    { place: 2, name: "Сабрина", xp: 1180 },
+    { place: 3, name: "Шумо", xp: 940, me: true },
+    { place: 4, name: "Фаррух", xp: 820 },
+  ];
+
+  return (
+    <div className="px-3.5">
+      <div className="text-[11px] font-extrabold text-text-dark">Душанбе</div>
+
+      <div className="mt-3 space-y-2">
+        {rows.map((r) => (
+          <div
+            key={r.place}
+            className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2.5 ${
+              r.me ? "bg-primary/10" : "border border-border-light"
+            }`}
+          >
+            <span className="w-3 text-[10px] font-extrabold text-text-muted">
+              {r.place}
             </span>
-          ))}
-        </div>
+            <span className="h-6 w-6 rounded-full bg-accent-cyan/25" />
+            <span className="flex-1 text-[10px] font-bold text-text-dark">
+              {r.name}
+            </span>
+            <span className="text-[10px] font-extrabold text-primary">
+              {r.xp}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════
-   MAIN PAGE
+   СТРАНИЦА
    ═══════════════════════════════════════════ */
 
+const steps = [
+  { n: "01", title: "Омӯзед", text: "Дарсҳои кӯтоҳ — рӯзе панҷ дақиқа." },
+  { n: "02", title: "Машқ кунед", text: "Кортҳо, шунидан ва навиштан." },
+  {
+    n: "03",
+    title: "Дар хотир нигоҳ доред",
+    text: "Такрори интервалӣ калимаро мустаҳкам мекунад.",
+  },
+];
+
+// Экран «Дарсҳо» уже показан в hero — здесь только то, чего там не было.
+const screens = [
+  { caption: "Машқ", el: <ScreenPractice /> },
+  { caption: "Рейтинги шаҳр", el: <ScreenRanking /> },
+];
+
+const reasons = [
+  {
+    title: "Бе забони мобайнӣ",
+    text: "Шумо аз русӣ ба тоҷикӣ тарҷума намекунед — маъно якбора равшан аст.",
+  },
+  {
+    title: "Ройгон",
+    text: "Ҳамаи дарсҳо ройгонанд. Tuti Plus ихтиёрӣ аст.",
+  },
+  {
+    title: "Муаллими AI",
+    text: "Ҳар вақт савол диҳед ва ҷавоби фаврӣ гиред.",
+  },
+];
+
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [email, setEmail] = useState("");
-
-  const navLinks = [
-    { label: "Имконият", href: "#features" },
-    { label: "Чӣ тавр?", href: "#how" },
-    { label: "Дар бора", href: "#about" },
-  ];
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (email.trim()) {
-      setEmailSubmitted(true);
-      setEmail("");
-    }
-  }
-
-  function scrollTo(href: string) {
-    setMobileMenuOpen(false);
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
     <div className="min-h-screen overflow-x-hidden">
-      {/* ─── NAVBAR ─── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-border-light/60">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-5 h-16">
-          {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <TutiMascot size={36} />
-            <span className="text-2xl font-extrabold text-text-dark">
-              Tuti
-            </span>
-          </button>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => scrollTo(link.href)}
-                className="text-sm font-semibold text-text-muted hover:text-primary transition-colors cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
+      {/* ─── ШАПКА ─── */}
+      <header className="sticky top-0 z-50 border-b border-border-light/60 bg-bg-mint/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+          <div className="flex items-center gap-2">
+            <TutiMascot size={34} />
+            <span className="text-xl font-extrabold text-text-dark">Tuti</span>
           </div>
-
-          {/* CTA */}
-          <button
-            onClick={() => scrollTo("#about")}
-            className="hidden md:block gradient-teal text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity cursor-pointer"
-          >
-            Боргирӣ кун
-          </button>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span
-              className={`block w-6 h-0.5 bg-text-dark transition-all ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-text-dark transition-all ${mobileMenuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-text-dark transition-all ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-            />
-          </button>
-        </div>
-
-        {/* Mobile dropdown */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-border-light px-5 pb-4 pt-2 space-y-3">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => scrollTo(link.href)}
-                className="block w-full text-left text-base font-semibold text-text-dark hover:text-primary transition-colors cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
-            <button
-              onClick={() => scrollTo("#about")}
-              className="w-full gradient-teal text-white font-bold text-sm px-5 py-2.5 rounded-xl cursor-pointer"
+          {APP_STORE_URL ? (
+            <a
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-xl bg-primary px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90"
             >
-              Боргирӣ кун
-            </button>
-          </div>
-        )}
-      </nav>
+              Боргирӣ кунед
+            </a>
+          ) : (
+            <span className="text-sm font-semibold text-text-muted">
+              Ба зудӣ
+            </span>
+          )}
+        </div>
+      </header>
 
       {/* ─── HERO ─── */}
-      <section className="pt-28 pb-16 md:pt-36 md:pb-24 px-5">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-16">
-          {/* Left column */}
-          <div className="flex-1 max-w-xl">
+      <section className="px-5 pt-14 pb-20 md:pt-24 md:pb-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-[1.15fr_auto] md:gap-10">
+          <div>
             <FadeUp>
-              <div className="inline-flex items-center gap-2 bg-accent-cyan/10 text-text-dark text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                🦜 Барномаи нави омӯзишӣ барои Тоҷикистон
-              </div>
-            </FadeUp>
-
-            <FadeUp delay="delay-100">
-              <h1 className="text-[32px] md:text-[48px] font-black leading-tight mb-5 text-text-dark">
-                Русӣ ва Англисӣ
+              <h1 className="text-[36px] font-black leading-[1] tracking-[-0.03em] text-text-dark sm:text-[52px] md:text-[68px]">
+                Англисӣ ва русӣ —
                 <br />
-                <span className="gradient-text">бо завқ омӯзед!</span>
+                <span className="gradient-text">бо тоҷикӣ.</span>
               </h1>
             </FadeUp>
 
-            <FadeUp delay="delay-200">
-              <p className="text-lg text-text-muted leading-relaxed mb-8 max-w-md">
-                Tuti — барномаи ройгон барои омӯхтани забонҳои русӣ ва англисӣ.
-                Дарсҳои кӯтоҳ, бозиҳои шавқовар ва натиҷаи воқеӣ.
+            <FadeUp delay="delay-100">
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-text-muted md:text-xl">
+                Ҳар қоида ва ҳар калима бо забони модарии шумо шарҳ дода
+                мешавад.
               </p>
             </FadeUp>
 
-            <FadeUp delay="delay-300">
-              <div className="flex flex-wrap gap-3 mb-8">
-                <button
-                  onClick={() => scrollTo("#about")}
-                  className="gradient-teal text-white font-bold px-7 py-3.5 rounded-2xl text-base animate-pulse-glow hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  📱 Боргирӣ кунед
-                </button>
-                <button
-                  onClick={() => scrollTo("#features")}
-                  className="border-2 border-primary text-primary font-bold px-7 py-3.5 rounded-2xl text-base hover:bg-primary/5 transition-colors cursor-pointer"
-                >
-                  Бештар бидонед ↓
-                </button>
-              </div>
-            </FadeUp>
-
-            <FadeUp delay="delay-400">
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2">
-                  {[
-                    { letter: "А", bg: "bg-primary" },
-                    { letter: "Б", bg: "bg-accent-cyan" },
-                    { letter: "В", bg: "bg-accent-yellow" },
-                    { letter: "Г", bg: "bg-accent-green" },
-                  ].map((u) => (
-                    <div
-                      key={u.letter}
-                      className={`w-8 h-8 rounded-full ${u.bg} flex items-center justify-center text-white text-xs font-bold border-2 border-white`}
-                    >
-                      {u.letter}
-                    </div>
-                  ))}
-                </div>
-                <span className="text-sm text-text-muted font-medium">
-                  <strong className="text-text-dark">500+</strong> нафар аллакай
-                  истифода мебаранд
-                </span>
-              </div>
-            </FadeUp>
-          </div>
-
-          {/* Right column — Phone */}
-          <div className="flex-shrink-0">
             <FadeUp delay="delay-200">
-              <PhoneMockup />
+              <div className="mt-9">
+                <DownloadButton />
+                <SoonNote />
+              </div>
             </FadeUp>
           </div>
+
+          <FadeUp delay="delay-200" className="flex justify-center md:justify-end">
+            <div className="animate-float">
+              <Phone>
+                <ScreenLessons />
+              </Phone>
+            </div>
+          </FadeUp>
         </div>
       </section>
 
-      {/* ─── FEATURES ─── */}
-      <section id="features" className="py-20 px-5">
-        <div className="max-w-6xl mx-auto">
+      {/* ─── КАК РАБОТАЕТ ─── */}
+      <section className="px-5 py-16 md:py-24">
+        <div className="mx-auto max-w-6xl">
           <FadeUp>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-text-dark mb-3">
-              Чаро Tuti? 🦜
+            <h2 className="text-3xl font-black tracking-tight text-text-dark md:text-[40px]">
+              Чӣ тавр кор мекунад
             </h2>
           </FadeUp>
-          <FadeUp delay="delay-100">
-            <p className="text-center text-text-muted text-lg mb-12 max-w-lg mx-auto">
-              Мо забономӯзиро осон ва шавқовар кардем
-            </p>
-          </FadeUp>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {[
-              {
-                emoji: "🎮",
-                title: "Бозиҳои шавқовар",
-                desc: "Дарсҳо ба монанди бозӣ — ҳар рӯз 5 дақиқа кифоя аст",
-              },
-              {
-                emoji: "🇹🇯",
-                title: "Барои тоҷикон",
-                desc: "Тарҷума ва шарҳ бо забони тоҷикӣ — забони модарии шумо",
-              },
-              {
-                emoji: "📴",
-                title: "Бе интернет",
-                desc: "Дарсҳоро боргирӣ кунед ва бе интернет омӯзед",
-              },
-              {
-                emoji: "📈",
-                title: "Натиҷаи воқеӣ",
-                desc: "Системаи такрори интервалӣ — калимаҳо дар хотир мемонанд",
-              },
-            ].map((f, i) => (
+          <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-3 md:gap-8">
+            {steps.map((s, i) => (
               <FadeUp
-                key={f.title}
-                delay={
-                  i === 0
-                    ? ""
-                    : i === 1
-                      ? "delay-100"
-                      : i === 2
-                        ? "delay-200"
-                        : "delay-300"
-                }
+                key={s.n}
+                delay={i === 1 ? "delay-100" : i === 2 ? "delay-200" : ""}
               >
-                <div className="bg-white rounded-[20px] border border-border-light p-7 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                  <div className="text-4xl mb-4">{f.emoji}</div>
-                  <h3 className="text-lg font-bold text-text-dark mb-2">
-                    {f.title}
+                <div className="border-t border-text-dark/15 pt-5">
+                  <span className="text-sm font-extrabold text-primary">
+                    {s.n}
+                  </span>
+                  <h3 className="mt-3 text-xl font-extrabold text-text-dark">
+                    {s.title}
                   </h3>
-                  <p className="text-text-muted text-sm leading-relaxed">
-                    {f.desc}
+                  <p className="mt-2 leading-relaxed text-text-muted">
+                    {s.text}
                   </p>
                 </div>
               </FadeUp>
@@ -400,56 +390,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
-      <section id="how" className="py-20 px-5">
-        <div className="max-w-[700px] mx-auto">
+      {/* ─── ПРОДУКТ ─── */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-5">
           <FadeUp>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-text-dark mb-3">
-              Чӣ тавр кор мекунад?
+            <h2 className="text-3xl font-black tracking-tight text-text-dark md:text-[40px]">
+              Дар дохили Tuti
             </h2>
           </FadeUp>
-          <FadeUp delay="delay-100">
-            <p className="text-center text-text-muted text-lg mb-14">
-              Дар 3 қадам оғоз кунед
-            </p>
+        </div>
+
+        <FadeUp delay="delay-100">
+          {/* На телефоне — карусель с центрированием карточки, на десктопе — ряд */}
+          <div className="mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[calc(50vw-115px)] pb-6 md:mt-14 md:justify-center md:gap-10 md:overflow-visible md:px-5">
+            {screens.map((s) => (
+              <div key={s.caption} className="snap-center">
+                <Phone>{s.el}</Phone>
+                <p className="mt-4 text-center text-sm font-bold text-text-dark">
+                  {s.caption}
+                </p>
+              </div>
+            ))}
+          </div>
+        </FadeUp>
+      </section>
+
+      {/* ─── ПОЧЕМУ TUTI ─── */}
+      <section className="px-5 py-16 md:py-24">
+        <div className="mx-auto max-w-6xl">
+          <FadeUp>
+            <h2 className="text-3xl font-black tracking-tight text-text-dark md:text-[40px]">
+              Чаро Tuti
+            </h2>
           </FadeUp>
 
-          <div className="space-y-10">
-            {[
-              {
-                num: 1,
-                title: "Боргирӣ кунед",
-                desc: "Tuti-ро аз Google Play ройгон боргирӣ кунед ва насб кунед",
-              },
-              {
-                num: 2,
-                title: "Забонро интихоб кунед",
-                desc: "Русӣ ё Англисӣ — ё ҳар ду! Сатҳи худро муайян кунед",
-              },
-              {
-                num: 3,
-                title: "Ҳар рӯз омӯзед",
-                desc: "5 дақиқа дар рӯз кифоя аст. Tuti ба шумо ёдоварӣ мекунад 🦜",
-              },
-            ].map((step, i) => (
+          <div className="mt-10 md:mt-14 md:grid md:grid-cols-3 md:gap-12">
+            {reasons.map((r, i) => (
               <FadeUp
-                key={step.num}
-                delay={
-                  i === 0 ? "" : i === 1 ? "delay-100" : "delay-200"
-                }
+                key={r.title}
+                delay={i === 1 ? "delay-100" : i === 2 ? "delay-200" : ""}
               >
-                <div className="flex items-start gap-5">
-                  <div className="flex-shrink-0 w-11 h-11 rounded-full gradient-teal flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-primary/30">
-                    {step.num}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-text-dark mb-1">
-                      {step.title}
-                    </h3>
-                    <p className="text-text-muted leading-relaxed">
-                      {step.desc}
-                    </p>
-                  </div>
+                <div className="border-t border-text-dark/15 py-6 md:py-0 md:pt-6">
+                  <h3 className="text-xl font-extrabold text-text-dark">
+                    {r.title}
+                  </h3>
+                  <p className="mt-2 leading-relaxed text-text-muted">
+                    {r.text}
+                  </p>
                 </div>
               </FadeUp>
             ))}
@@ -457,62 +444,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── CTA SECTION ─── */}
-      <section id="about" className="py-20 px-5">
-        <div className="max-w-3xl mx-auto relative overflow-hidden rounded-[28px] gradient-teal px-6 py-16 md:px-16 text-center">
-          {/* Decorative circles */}
-          <div className="absolute top-[-40px] right-[-40px] w-32 h-32 rounded-full bg-white/10" />
-          <div className="absolute bottom-[-30px] left-[-30px] w-24 h-24 rounded-full bg-white/10" />
-          <div className="absolute top-[40%] left-[10%] w-16 h-16 rounded-full bg-white/5" />
-
-          <FadeUp>
-            <div className="relative z-10">
-              <div className="mx-auto mb-6 w-[72px] h-[72px] rounded-full bg-white/20 flex items-center justify-center">
-                <TutiMascot size={52} />
-              </div>
-              <h2 className="text-2xl md:text-[32px] font-extrabold text-white mb-4 leading-tight">
-                Аввалин шавед, ки Tuti-ро
-                <br />
-                истифода баред!
-              </h2>
-              <p className="text-white/85 text-base md:text-lg mb-8 max-w-md mx-auto">
-                Email-и худро гузоред ва мо ба шумо хабар медиҳем вақте ки Tuti
-                тайёр мешавад
-              </p>
-
-              {!emailSubmitted ? (
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-                >
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email-и шумо..."
-                    required
-                    className="flex-1 px-5 py-3.5 rounded-xl text-text-dark font-medium placeholder:text-text-muted/60 outline-none focus:ring-2 focus:ring-accent-yellow"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-accent-yellow text-text-dark font-bold px-6 py-3.5 rounded-xl hover:brightness-105 transition-all whitespace-nowrap cursor-pointer"
-                  >
-                    Ман мехоҳам! 🦜
-                  </button>
-                </form>
-              ) : (
-                <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 inline-block">
-                  <span className="text-white text-lg font-bold">
-                    ✅ Ташаккур! Мо ба шумо хабар медиҳем!
-                  </span>
-                </div>
-              )}
+      {/* ─── ФИНАЛЬНЫЙ CTA ─── */}
+      <section className="bg-primary px-5 py-20 md:py-28">
+        <FadeUp>
+          <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+            <TutiMascot size={56} />
+            <h2 className="mt-7 text-[32px] font-black leading-[1.05] tracking-[-0.02em] text-white md:text-[46px]">
+              Забони худ.
+              <br />
+              Суръати худ.
+            </h2>
+            <div className="mt-9">
+              <DownloadButton variant="white" />
+              <SoonNote tone="light" />
             </div>
-          </FadeUp>
-        </div>
+          </div>
+        </FadeUp>
       </section>
 
-      {/* ─── FOOTER ─── */}
       <SiteFooter />
     </div>
   );
