@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# держим образец переменных в репозитории
+!.env.example
+
+# Ключ сервис-аккаунта Firebase Admin SDK — только локально
+*firebase-adminsdk*.json
