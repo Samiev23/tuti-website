@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
-  subsets: ["latin", "cyrillic"],
-  weight: ["500", "600", "700", "800", "900"],
-});
+import { nunito } from "@/app/fonts";
 
 export const metadata: Metadata = {
   title: "Tuti — Омӯзиши забонҳои русӣ ва англисӣ",
