@@ -64,7 +64,7 @@ function DownloadButton({ variant = "solid" }: { variant?: "solid" | "white" }) 
         type="button"
         disabled
         aria-disabled="true"
-        className={`${base} ${skin} opacity-70 cursor-default`}
+        className={`${base} ${skin} cursor-default opacity-80`}
       >
         Боргирӣ кунед
       </button>
@@ -192,6 +192,9 @@ function ScreenPractice() {
     { from: "ai", text: "Дирӯз чӣ кор кардӣ?" },
     { from: "me", text: "I go to school." },
     { from: "ai", text: "Наздик! «I went to school» — гузашта." },
+    { from: "me", text: "I went to school." },
+    { from: "ai", text: "Дуруст. Акнун бо «yesterday» кӯшиш кунед." },
+    { from: "me", text: "Yesterday I went to school." },
   ];
 
   return (
@@ -228,6 +231,9 @@ function ScreenRanking() {
     { place: 2, name: "Сабрина", xp: 1180 },
     { place: 3, name: "Шумо", xp: 940, me: true },
     { place: 4, name: "Фаррух", xp: 820 },
+    { place: 5, name: "Мадина", xp: 760 },
+    { place: 6, name: "Ҷамшед", xp: 705 },
+    { place: 7, name: "Зарина", xp: 640 },
   ];
 
   return (
@@ -401,8 +407,9 @@ export default function Home() {
         </div>
 
         <FadeUp delay="delay-100">
-          {/* На телефоне — карусель с центрированием карточки, на десктопе — ряд */}
-          <div className="mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[calc(50vw-115px)] pb-6 md:mt-14 md:justify-center md:gap-10 md:overflow-visible md:px-5">
+          {/* На телефоне — карусель с центрированием карточки,
+              на десктопе — ряд по левому краю, под заголовком */}
+          <div className="mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[calc(50vw-115px)] pb-6 md:mx-auto md:mt-14 md:max-w-6xl md:justify-start md:gap-10 md:overflow-visible md:px-5">
             {screens.map((s) => (
               <div key={s.caption} className="snap-center">
                 <Phone>{s.el}</Phone>
@@ -448,7 +455,10 @@ export default function Home() {
       <section className="bg-primary px-5 py-20 md:py-28">
         <FadeUp>
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-            <TutiMascot size={56} />
+            {/* На бирюзовой плашке маскот сливается с фоном — сажаем в белый круг */}
+            <div className="rounded-full bg-white p-3.5">
+              <TutiMascot size={48} />
+            </div>
             <h2 className="mt-7 text-[32px] font-black leading-[1.05] tracking-[-0.02em] text-white md:text-[46px]">
               Забони худ.
               <br />
